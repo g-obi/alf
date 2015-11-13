@@ -9,8 +9,8 @@ import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 
-import my.ai.aidatamodel.VisualAnalyticsResponse;
-import my.ai.aidatamodel.VisualAnalyticsWorkorder;
+import my.alf.transferdata.VisualAnalyticsResponse;
+import my.alf.transferdata.VisualAnalyticsWorkorder;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
