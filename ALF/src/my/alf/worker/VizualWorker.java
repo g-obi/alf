@@ -36,8 +36,9 @@ import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 
-import my.ai.aidatamodel.VisualAnalyticsResponse;
-import my.ai.aidatamodel.VisualAnalyticsWorkorder;
+import my.alf.transferdata.VisualAnalyticsResponse;
+import my.alf.transferdata.VisualAnalyticsWorkorder;
+
 
 
 public class VizualWorker {
