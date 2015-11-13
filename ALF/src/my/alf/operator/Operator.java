@@ -208,7 +208,7 @@ public class Operator {
 			ObjectOutputStream oos = null;
 			ObjectInputStream ois = null;
 			try {
-				socket = new Socket("192.168.0.8", 4321);
+				socket = new Socket(SERVERIP, 4321);
 				OutputStream os = socket.getOutputStream();
 				oos = new ObjectOutputStream(os);
 				InputStream is = socket.getInputStream();
