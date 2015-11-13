@@ -55,6 +55,10 @@ import javax.swing.JMenuItem;
 
 
 public class Operator {
+	
+	private static final int CAMNUMBER = 0;
+	private static final String SERVERIP = "192.168.0.5";
+	
 	private static class FrameData {
 		public MatOfByte mobImage;
 		public Mat matImage;
@@ -81,7 +85,7 @@ public class Operator {
 		mainLoop();
 	}
 	private static void mainLoop() {
-		VideoCapture video = new VideoCapture(0);
+		VideoCapture video = new VideoCapture(CAMNUMBER);
 		long ms;
 		while (doMainloop) {
 			ms = System.currentTimeMillis();
