@@ -169,7 +169,16 @@ public class Operator {
 		mainPanel.add(outputPanel);
 
 		// Frame
-		JFrame frame = new JFrame("Desktop Test 3");
+		JFrame frame = new JFrame("ALF Operator");
+		frame.addWindowListener(new WindowAdapter() { 
+            public void windowClosing(WindowEvent e) { 
+                ExitAction.getInstance().actionPerformed(null); 
+            } 
+
+
+});
+
+
 		frame.setJMenuBar(menuBar);
 		frame.add(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
