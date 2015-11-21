@@ -5,12 +5,9 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
@@ -27,12 +24,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
 import org.opencv.core.Core;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.objdetect.CascadeClassifier;
 
@@ -42,6 +37,7 @@ import my.alf.transferdata.VisualAnalyticsWorkorder;
 
 
 public class VizualWorker {
+	private static final int CAM_ANGEL = 50;
 	private ExecutorService executors = Executors.newFixedThreadPool(10);
 	private boolean isRunning = true;
 	static BufferedImage image = null;
@@ -98,7 +94,6 @@ public class VizualWorker {
 	}
 
 	private class Worker implements Runnable {
-		private BufferedReader in = null;
 		private Socket s = null;
 
 		Worker(Socket socket) throws Exception {
@@ -109,6 +104,8 @@ public class VizualWorker {
 		public void run() {
 			v("Worker running");
 			int i;
+			double tana = Math.tan(CAM_ANGEL);
+			double A = 0, B=0;
 			InputStream is = null;
 			ObjectInputStream ois = null;
 			OutputStream os = null;
@@ -127,10 +124,7 @@ public class VizualWorker {
 				os = s.getOutputStream();
 				ois = new ObjectInputStream(is);
 				oos = new ObjectOutputStream(os);
-			} catch (IOException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
+			} catch (IOException e2) {}
 
 			while (thisRunning && s.isConnected() && s.isBound()) {
 				try {
@@ -145,14 +139,12 @@ public class VizualWorker {
 								e1.printStackTrace();
 							}
 							imagePanel.repaint();
-							v("Frame Number: " + String.valueOf(testData.frameNumber));
 							results = new MatOfRect();
 							try {
 								m = System.currentTimeMillis();
 								cc.detectMultiScale(mat, results);
 								testResponse.processingTime = System.currentTimeMillis() - m;
 								aResults = results.toArray();
-								v("faces: ", aResults.length);
 								testResponse.faces = new int[aResults.length*4];
 								for(i=0; i<aResults.length; i++) {
 									testResponse.faces[4*i+0] = aResults[i].height;
@@ -164,8 +156,8 @@ public class VizualWorker {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
-							mob.release();
-							mat.release();
+							//mob.release();
+							//mat.release();
 						}
 						
 						oos.writeObject(testResponse);
@@ -182,10 +174,7 @@ public class VizualWorker {
 				testData = null;
 				try {
 					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (InterruptedException e) {}
 			}
 			v("worker shutting down");
 
