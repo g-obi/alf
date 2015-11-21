@@ -3,7 +3,6 @@ package my.alf.operator;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
@@ -11,20 +10,14 @@ import org.opencv.videoio.VideoCapture;
 import my.alf.transferdata.VisualAnalyticsResponse;
 import my.alf.transferdata.VisualAnalyticsWorkorder;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,21 +25,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.security.DomainLoadStoreParameter;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.JTextPane;
-import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.xml.ws.spi.Invoker;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -186,7 +169,16 @@ public class Operator {
 		mainPanel.add(outputPanel);
 
 		// Frame
-		JFrame frame = new JFrame("Desktop Test 3");
+		JFrame frame = new JFrame("ALF Operator");
+		frame.addWindowListener(new WindowAdapter() { 
+            public void windowClosing(WindowEvent e) { 
+                ExitAction.getInstance().actionPerformed(null); 
+            } 
+
+
+});
+
+
 		frame.setJMenuBar(menuBar);
 		frame.add(mainPanel);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
