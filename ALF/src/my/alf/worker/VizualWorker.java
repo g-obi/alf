@@ -1,5 +1,6 @@
 package my.alf.worker;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -42,7 +43,8 @@ public class VizualWorker {
 	private boolean isRunning = true;
 	static BufferedImage image = null;
 	static JPanel imagePanel = null;
-
+	public static VisualProcessor visualProcessor = new VisualProcessor();
+	
 	public static void main(String[] args) throws Exception {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		initFrame();
@@ -59,7 +61,6 @@ public class VizualWorker {
 		}
 		sso.close();
 	}
-
 	static void initFrame() {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu mnFile = new JMenu("File");
@@ -80,6 +81,11 @@ public class VizualWorker {
 		        }
 		        g.drawRect(0, 0, 643, 483);
 		        g.drawRect(1, 1, 641, 481);
+		        Rect[] items = visualProcessor.getItems();
+		        g.setColor(new Color(255, 0, 0));
+		        for(int i=0; i<items.length; i++) {
+		        	g.drawRect(items[i].x, items[i].y, items[i].width, items[i].height);
+		        }
 		    }
 		};
 		imagePanel.setPreferredSize(new Dimension(644, 484));
@@ -92,20 +98,17 @@ public class VizualWorker {
 		frame.setVisible(true);
 		frame.repaint();
 	}
-
-	private class Worker implements Runnable {
+	private static class Worker implements Runnable {
 		private Socket s = null;
-
-		Worker(Socket socket) throws Exception {
+		public Worker(Socket socket) throws Exception {
+			System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 			v("Worker created");
 			s = socket;
 		}
-
 		public void run() {
 			v("Worker running");
 			int i;
-			double tana = Math.tan(CAM_ANGEL);
-			double A = 0, B=0;
+
 			InputStream is = null;
 			ObjectInputStream ois = null;
 			OutputStream os = null;
@@ -117,7 +120,7 @@ public class VizualWorker {
 			MatOfRect results = null;;
 			Rect[] aResults;
 			long m = 0;
-			CascadeClassifier cc = new CascadeClassifier("C:\\opencv\\sources\\data\\haarcascades_cuda\\haarcascade_frontalface_default.xml");
+			//CascadeClassifier cc = new CascadeClassifier("C:\\opencv\\sources\\data\\haarcascades_cuda\\haarcascade_frontalface_default.xml");
 			boolean thisRunning = true;
 			try {
 				is = s.getInputStream();
@@ -141,10 +144,11 @@ public class VizualWorker {
 							imagePanel.repaint();
 							results = new MatOfRect();
 							try {
-								m = System.currentTimeMillis();
-								cc.detectMultiScale(mat, results);
+								m = System.currentTimeMillis(); 
+								//cc.detectMultiScale(mat, results);
+								visualProcessor.processImage(testData.frameNumber, mat);
 								testResponse.processingTime = System.currentTimeMillis() - m;
-								aResults = results.toArray();
+								aResults = visualProcessor.getItems();
 								testResponse.faces = new int[aResults.length*4];
 								for(i=0; i<aResults.length; i++) {
 									testResponse.faces[4*i+0] = aResults[i].height;
