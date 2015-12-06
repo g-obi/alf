@@ -1,4 +1,4 @@
-package my.alf.operator;
+package my.alf.utils;
 
 import java.util.ArrayList;
 import java.util.Enumeration;

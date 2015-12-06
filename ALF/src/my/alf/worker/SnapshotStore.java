@@ -1,12 +1,10 @@
 package my.alf.worker;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import org.opencv.core.Rect;
 
 public class SnapshotStore {
-	public static ArrayList<Snapshot> snapshots = new ArrayList<Snapshot>();
+	public ArrayList<Snapshot> snapshots = new ArrayList<Snapshot>();
 	public void deleteOldItems(long ms) {
 		// todo: Implement clean up
 	}

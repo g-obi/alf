@@ -27,18 +27,14 @@ import javax.swing.JPanel;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
-import org.opencv.core.MatOfRect;
 import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
-import org.opencv.objdetect.CascadeClassifier;
-
 import my.alf.transferdata.VisualAnalyticsResponse;
 import my.alf.transferdata.VisualAnalyticsWorkorder;
 
 
 
 public class VizualWorker {
-	private static final int CAM_ANGEL = 50;
 	private ExecutorService executors = Executors.newFixedThreadPool(10);
 	private boolean isRunning = true;
 	static BufferedImage image = null;
@@ -81,10 +77,17 @@ public class VizualWorker {
 		        }
 		        g.drawRect(0, 0, 643, 483);
 		        g.drawRect(1, 1, 641, 481);
-		        Rect[] items = visualProcessor.getItems();
-		        g.setColor(new Color(255, 0, 0));
-		        for(int i=0; i<items.length; i++) {
-		        	g.drawRect(items[i].x, items[i].y, items[i].width, items[i].height);
+		        if(!visualProcessor.store.snapshots.isEmpty()) {
+			        Snapshot s = visualProcessor.store.snapshots.get(visualProcessor.store.snapshots.size()-1);
+			        Rect[] items = s.items;
+			        for(int i=0; i<items.length; i++) {
+			        	if(s.followup[i] > 10) {
+			        		g.setColor(new Color(255,255,0));
+			        	} else {
+			        		g.setColor(new Color(200,10,0));
+			        	}
+			        	g.drawRect(items[i].x, items[i].y, items[i].width, items[i].height);
+			        }
 		        }
 		    }
 		};
@@ -117,7 +120,6 @@ public class VizualWorker {
 			VisualAnalyticsResponse testResponse = null;
 			MatOfByte mob = null;
 			Mat mat = null;
-			MatOfRect results = null;;
 			Rect[] aResults;
 			long m = 0;
 			//CascadeClassifier cc = new CascadeClassifier("C:\\opencv\\sources\\data\\haarcascades_cuda\\haarcascade_frontalface_default.xml");
@@ -141,8 +143,6 @@ public class VizualWorker {
 							} catch (IOException e1) {
 								e1.printStackTrace();
 							}
-							imagePanel.repaint();
-							results = new MatOfRect();
 							try {
 								m = System.currentTimeMillis(); 
 								//cc.detectMultiScale(mat, results);
@@ -160,6 +160,8 @@ public class VizualWorker {
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
+							imagePanel.repaint();
+
 							//mob.release();
 							//mat.release();
 						}
@@ -192,5 +194,8 @@ public class VizualWorker {
 	}
 	public static void v(String s, int i) {
 		System.out.println(s + String.valueOf(i));
+	}
+	public static void v(String s, double d) {
+		System.out.println(s + String.valueOf(d));
 	}
 }
