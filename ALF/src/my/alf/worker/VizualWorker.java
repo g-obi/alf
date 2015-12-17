@@ -31,6 +31,8 @@ import org.opencv.core.Rect;
 import org.opencv.imgcodecs.Imgcodecs;
 import my.alf.transferdata.VisualAnalyticsResponse;
 import my.alf.transferdata.VisualAnalyticsWorkorder;
+import my.alf.visualunit.Snapshot;
+import my.alf.visualunit.VisualProcessor;
 
 
 
@@ -145,7 +147,6 @@ public class VizualWorker {
 							}
 							try {
 								m = System.currentTimeMillis(); 
-								//cc.detectMultiScale(mat, results);
 								visualProcessor.processImage(testData.frameNumber, mat);
 								testResponse.processingTime = System.currentTimeMillis() - m;
 								aResults = visualProcessor.getItems();

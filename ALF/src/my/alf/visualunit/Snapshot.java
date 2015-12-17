@@ -1,4 +1,4 @@
-package my.alf.worker;
+package my.alf.visualunit;
 
 import org.opencv.core.Rect;
 
